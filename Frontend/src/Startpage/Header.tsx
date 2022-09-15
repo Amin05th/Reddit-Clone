@@ -20,11 +20,9 @@ export default function Header({userName}:Props) {
 
   return (
     <div className = "d-flex justify-content-around" style = {{marginTop: "1%"}}>
-      <div className = "d-flex flex-column" style={{width: "70%", marginLeft: "1%", height: "100vh"}}>
+      <div className = "d-flex flex-column" style={{width: "70%", height: "100vh"}}>
         <SearchBar getSearchResult = {setSearchResult}/>
-        {searchResult.length >= 1 && <div className = "mt-1" style = {{maxHeight: "80vh", overflow: "auto", boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"}}>
-          <SearchResult searchResult = {searchResult}/>
-        </div>}
+        {searchResult.length >= 1 && <SearchResult searchResult = {searchResult}/>}
       </div>
 
       {/* show something if user is logged in and another thing if he is not logged in */}

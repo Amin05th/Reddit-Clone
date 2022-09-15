@@ -15,7 +15,7 @@ export default function LogIn({setUserName}:Props) {
 
   function onSubmit(e:any) {
     e.preventDefault()
-    axios.post('http://localhost:3000/login', {
+    axios.post('http://localhost:3001/login', {
       email: email.current.value,
       password: password.current.value ,
     }).then(res => {
@@ -33,7 +33,7 @@ export default function LogIn({setUserName}:Props) {
             <Form.Control type = "email" ref = {email} required placeholder='Email ...'/>
             <Form.Control type = "password" ref = {password} required placeholder='Password ...'/>
             <Button type = "submit" className = "w-100">Log In</Button>
-            <p ref = {errorMessage}></p>
+            <p className = "text-danger" data-testid = "error" ref = {errorMessage}></p>
         </Form>
     </div>
   )

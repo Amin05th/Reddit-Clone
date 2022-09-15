@@ -5,7 +5,7 @@ import bcrypt from "bcrypt"
 const prisma = new PrismaClient()
 
 const app = fastify()
-const Port = 3000
+const Port = 3001
 
 app.register(cors, {
     origin: "*",
@@ -14,6 +14,22 @@ app.register(cors, {
 
 app.get('/users', async () => {
     return await prisma.user.findMany()
+})
+
+app.get('/post/:id', async (req: any) => {
+    const postId = req.params.id
+    const post = await prisma.post.findFirst({where: {id: postId}})
+    // todo: make error Handlings
+    if(post == undefined) return
+    return post
+})
+
+app.get('/posts/:name/:lastname', async (req: any) => {
+    const name = req.params.name
+    const lastname = req.params.lastname
+    const user = await prisma.user.findFirst({where: {name: name, lastname: lastname}, include: {post: true}})
+    if (user == undefined) return "404 User not found"
+    return user.post
 })
 
 app.post('/signin', async (req:any, res:any) => {
@@ -61,8 +77,8 @@ async function comparePasswords(typedInPassword:string, user:any) {
 
 
 async function main() {
-    const users = await prisma.user.findFirst({where: {name: "Amin"}, include: {post: true}})
-    console.log(users)
+    // const users = await prisma.post.findMany()
+    // console.log(users)
 
     // console.log(await prisma.user.deleteMany())
 }

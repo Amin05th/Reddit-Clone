@@ -1,39 +1,31 @@
-import React, { useRef } from 'react'
-import { Modal, Form, Button } from 'react-bootstrap'
-import axios from 'axios'
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { getPostById } from '../Data/Post'
+import CommentForm from './CommentForm'
+import { CloseButton } from 'react-bootstrap'
 
-interface Props {
-    userName: {
-        name: string,
-        lastname: string
+export default function Post() {
+  const [post, setPost]:any = useState()
+  const { id } = useParams()
+  const goToPreviousPage = () => history.back()
+  
+  useEffect(() => {
+    async function getSpecificPost(){
+      const post = await getPostById(id)
+      setPost(post)
     }
-}
-
-export default function Post({userName}: Props) {
-    const Title:any = useRef()
-    const Message:any = useRef()
-    const closeModal = () => location.href = "/"
-    function createPost() {
-        axios.post('http://localhost:3000/createPost', {
-            name: userName.name,
-            lastname: userName.lastname,
-            title: Title.current.value,
-            message: Message.current.value
-        })
-    }
+    getSpecificPost()
+  }, [])
 
   return (
-    <Modal show = {true} onHide = {closeModal} className = "position-absolute" style = {{ height: "100vh", width: "100vw"}}>
-        <Modal.Header closeButton>
-            <Modal.Title> Create Post </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-            <Form action='/' onSubmit={() => createPost()}>
-                <Form.Control required ref = {Title} placeholder='Title...' />
-                <Form.Control required ref = {Message} style = {{resize: "none", height: "250px"}} placeholder='Message' as="textarea" />
-                <Button type = "submit" className = "w-100">create Post</Button>
-            </Form>
-        </Modal.Body>
-    </Modal>
+    <div className = "ms-3 d-flex flex-column" style = {{height: "100vh", width: "100vw"}}>
+      <CloseButton onClick={goToPreviousPage} className = "position-absolute" style = {{top: 0, right: "1%"}}/>
+      <h1>{post?.title}</h1>
+      <article>{post?.message}</article>
+      <h4 className = "my-3">Comments</h4>
+      <section>
+        <CommentForm />
+      </section>
+    </div>
   )
 }

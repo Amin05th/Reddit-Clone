@@ -33,7 +33,7 @@ export default function Settings({userName}: Props) {
       </Modal.Header>
       <Modal.Body style = {{width: "100%", height: "50vh"}} className = "d-flex flex-column align-items-center justify-content-around">
           {createLink("My Profile", `/${userName.name}&${userName.lastname}/${uuid()}`)}
-          {createLink("Create Post", `/post/${uuid()}`)}
+          {createLink("Create Post", `/createpost/${uuid()}`)}
           <button className = "w-75 h-25 mb-1" style = {{ backgroundColor: "rgba(0,0,0,0.2)"}} >Liked Posts</button>
           <button className = "w-75 h-25 mb-1" style = {{ backgroundColor: "rgba(0,0,0,0.2)"}} >Commented Posts</button>
           <button onClick = {() => logOut()} className = "bg-danger w-75 h-25">Log out</button>
