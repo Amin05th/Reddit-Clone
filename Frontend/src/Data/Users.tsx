@@ -6,6 +6,6 @@ export async function getAllUsers(){
 }
 
 export async function getAllUsersPosts(name: (string | undefined), lastname: (string | undefined)) {
-    const posts = await axios.get(`http://localhost:3000/posts/${name}/${lastname}`)
+    const posts = await axios.get(`http://localhost:3001/posts/${name}/${lastname}`)
     return posts.data
 }

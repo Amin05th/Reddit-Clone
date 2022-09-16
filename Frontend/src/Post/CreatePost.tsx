@@ -14,7 +14,7 @@ export default function CreatePost({userName}: Props) {
     const Message:any = useRef()
     const closeModal = () => location.href = "/"
     function createPosts() {
-        axios.post('http://localhost:3000/createPost', {
+        axios.post('http://localhost:3001/createPost', {
             name: userName.name,
             lastname: userName.lastname,
             title: Title.current.value,

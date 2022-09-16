@@ -6,6 +6,18 @@ const prisma = new PrismaClient()
 
 const app = fastify()
 const Port = 3001
+const COMMENT_SELECT_FIELDS = {
+    id: true,
+    message: true,
+    parentId: true,
+    createdAt: true,
+    user: {
+      select: {
+        id: true,
+        name: true,
+      },
+    },
+  }
 
 app.register(cors, {
     origin: "*",
@@ -52,7 +64,6 @@ app.post('/signin', async (req:any, res:any) => {
 
 app.post('/login', async (req:any) => {
     const user = await prisma.user.findFirst({where: {email: req.body.email}})
-    console.log(user)
     if(user == undefined) return 'Email is not valid'
     const isPassword = await comparePasswords(req.body.password, user)
     if(!isPassword) return 'Password is not valid'
@@ -61,10 +72,25 @@ app.post('/login', async (req:any) => {
 
 app.post('/createPost', async (req:any) => {
     const user = await prisma.user.findFirst({where: {name: req.body.name, lastname: req.body.lastname}})
-    await prisma.post.create({data: {message: req.body.message, title: req.body.title, userId: user!.id},
-        include: {user: true}
+    await prisma.post.create({
+        data: {message: req.body.message, title: req.body.title, userId: user!.id},
+        include: {
+            user: true,
+            comments: true
+        }
     })
     
+})
+
+app.post('/posts/:id/comments', async (req: any) => {
+    await prisma.comments.create({
+        data: {
+            message: req.body.message,
+            postId: req.params.id,
+            parentId: req.body.parentId,
+            userId: 'todo',
+        }
+    })
 })
 
 app.listen({port: Port})
@@ -77,10 +103,12 @@ async function comparePasswords(typedInPassword:string, user:any) {
 
 
 async function main() {
-    // const users = await prisma.post.findMany()
+    // const users = await prisma.user.findFirst({where: {name: 'Amin'} ,include: {post: true}})
     // console.log(users)
 
-    // console.log(await prisma.user.deleteMany())
+    // console.log(await prisma.post.findMany())
+
+    // await prisma.post.deleteMany()
 }
 
 main()

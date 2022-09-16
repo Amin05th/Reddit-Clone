@@ -2,7 +2,7 @@ import React from 'react'
 import { Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { v4 as uuid } from 'uuid'
-import deleteLocalStorage from '../Hooks/deleteLocalStorage'
+import { deleteCookie } from '../Hooks/useCookies'
 
 interface Props {
   userName: {
@@ -22,7 +22,7 @@ const createLink = (text:string, href:string) => {
 export default function Settings({userName}: Props) {
 
   function logOut() {
-    deleteLocalStorage("username")
+    deleteCookie('user')
     location.reload()
   }
     

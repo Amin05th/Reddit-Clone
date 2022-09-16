@@ -1,5 +1,5 @@
 import './App.css'
-import useLocalStorage from './Hooks/useLocalStorage'
+import useCookies from './Hooks/useCookies'
 import Startpage from "./Startpage/Startpage"
 import LogIn from './Authentication/LogIn'
 import SignIn from "./Authentication/SignIn"
@@ -9,7 +9,8 @@ import Post from './Post/Post'
 import { Route, Routes} from "react-router-dom"
 
 function App() {
-  const [userName, setUserName] = useLocalStorage('username', {name: "", lastname: ""})
+  const [userName, setUserName] = useCookies('user', {name: '', lastname: ''})
+  
   return (
     <div className ="App w-100" style = {{height: "100vh"}}>
       <Routes>
