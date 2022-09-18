@@ -19,11 +19,6 @@ export default ({ command }: ConfigEnv): any => {
         environment: 'jsdom',
         globals: true
       },
-      resolve: {
-        alias: {
-          '/@': srcRoot
-        }
-      },
       build: {
         outDir: join(srcRoot, '/out'),
         emptyOutDir: true,

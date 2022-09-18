@@ -2,8 +2,13 @@ import React from 'react'
 import { v4 as uuid } from "uuid"
 import { Link } from "react-router-dom"
 
+interface Searchresult {
+  name: string,
+  lastName: string
+}
+
 interface Props {
-    searchResult: any
+    searchResult: Array<never | Searchresult>
 }
 
 export default function SearchResult({searchResult}:Props) {

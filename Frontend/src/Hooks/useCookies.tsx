@@ -1,7 +1,7 @@
 import { save, load, remove } from 'react-cookies'
 import { useState, useEffect } from 'react'
 
-const PREFIX = 'reddit-clone - '
+const PREFIX = 'redditClone'
 
 export default function saveCookies(key:string, Initalvalue:(string| object)) {
     const prefixedKey = PREFIX + key

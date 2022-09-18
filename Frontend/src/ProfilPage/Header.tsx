@@ -1,11 +1,16 @@
-import React from 'react'
+import React, {Dispatch, SetStateAction} from 'react'
 import { Link } from "react-router-dom"
 import SearchBar from '../Components/SearchBar'
+
+interface filtredUser {
+  name: string,
+  lastName: string
+}
 
 interface Props {
   name: string | undefined
   lastname: string | undefined
-  setSearchResult: React.Dispatch<React.SetStateAction<never[]>>
+  setSearchResult: Dispatch<SetStateAction<filtredUser[]| never[]>>
 }
 
 // todo: make the search User global

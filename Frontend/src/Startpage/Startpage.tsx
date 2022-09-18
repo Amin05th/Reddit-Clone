@@ -3,7 +3,10 @@ import { Container } from 'react-bootstrap'
 import Header from './Header'
 
 interface Props {
-  userName: any
+  userName: {
+    name: string
+    lastname: string
+  }
 }
 
 export default function Startpage({userName}:Props) {

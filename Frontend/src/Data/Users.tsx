@@ -1,11 +1,15 @@
-import axios from "axios"
+import useFetch from '../Hooks/useFetch'
 
 export async function getAllUsers(){
-    const users = await axios.get('http://localhost:3001/users')
-    return users.data
+    const users = await useFetch('/users', {
+        method: 'GET'
+    })
+    return users
 }
 
 export async function getAllUsersPosts(name: (string | undefined), lastname: (string | undefined)) {
-    const posts = await axios.get(`http://localhost:3001/posts/${name}/${lastname}`)
-    return posts.data
+    const posts = await useFetch(`posts/${name}/${lastname}`, {
+        method: 'GET'
+    })
+    return posts
 }

@@ -1,14 +1,12 @@
-import { useAsync } from './useAsync'
+import axios from "axios"
 
-const DEFAULT_OPTIONS = {
-    headers: { "Content-Type": "application/json" },
-}
+const api = axios.create({
+  baseURL: 'http://localhost:3001',
+  withCredentials: true
+})
 
-export default function useFetch(url:string, options = {}, dependencies = []) {
-    return useAsync(() => {
-      return fetch(url, { ...DEFAULT_OPTIONS, ...options }).then(res => {
-        if (res.ok) return res.json()
-        return res.json().then(json => Promise.reject(json))
-      })
-    }, dependencies)
+export default function useFetch(url:string, options = {}) {
+  return api(url, options)
+    .then(res => res.data)
+    .catch(error => Promise.reject(error?.response.data?.message ?? "Error"))
 }

@@ -9,7 +9,7 @@ import Post from './Post/Post'
 import { Route, Routes} from "react-router-dom"
 
 function App() {
-  const [userName, setUserName] = useCookies('user', {name: '', lastname: ''})
+  const [userName, setUserName] = useCookies('User', {name: '', lastname: ''})
   
   return (
     <div className ="App w-100" style = {{height: "100vh"}}>

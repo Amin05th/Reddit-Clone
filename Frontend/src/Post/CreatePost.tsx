@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 import { Modal, Form, Button } from 'react-bootstrap'
-import axios from 'axios'
+import useFetch from '../Hooks/useFetch'
 
 interface Props {
     userName: {
@@ -14,11 +14,14 @@ export default function CreatePost({userName}: Props) {
     const Message:any = useRef()
     const closeModal = () => location.href = "/"
     function createPosts() {
-        axios.post('http://localhost:3001/createPost', {
-            name: userName.name,
-            lastname: userName.lastname,
-            title: Title.current.value,
-            message: Message.current.value
+        useFetch('/createPost', {
+            method: 'POST',
+            data: {
+                name: userName.name,
+                lastname: userName.lastname,
+                title: Title.current.value,
+                message: Message.current.value
+            }
         })
     }
 
@@ -28,7 +31,7 @@ export default function CreatePost({userName}: Props) {
             <Modal.Title> Create Post </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-            <Form action='/' onSubmit={() => createPosts()}>
+            <Form action='/' onSubmit={createPosts}>
                 <Form.Control required ref = {Title} placeholder='Title...' />
                 <Form.Control required ref = {Message} style = {{resize: "none", height: "250px"}} placeholder='Message' as="textarea" />
                 <Button type = "submit" className = "w-100">create Post</Button>

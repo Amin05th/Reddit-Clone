@@ -1,6 +1,8 @@
-import axios from "axios"
+import useFetch from '../Hooks/useFetch'
 
 export async function getPostById(id: (string | undefined)) {
-    const post = await axios.get(`http://localhost:3001/post/${id}`)
-    return post.data
+    const post = await useFetch(`/post/${id}`, {
+        method: 'GET'
+    })
+    return post
 }

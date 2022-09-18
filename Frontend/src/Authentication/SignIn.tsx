@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
-import { Container, Form, Button } from 'react-bootstrap'
-import axios from 'axios'
+import { Form, Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
+import useFetch from '../Hooks/useFetch'
 
 export default function SignIn() {
   const name: any = useRef()
@@ -10,15 +10,17 @@ export default function SignIn() {
   const password: any = useRef()
   const errorMessage: any = useRef()
 
-  async function onSubmit(e:any){
-    e.preventDefault()
-    const createUser = await axios.post('http://localhost:3001/signin', {
-      name: name.current.value,
-      lastname: lastname.current.value,
-      email: email.current.value,
-      password: password.current.value,
+  async function onSubmit(){
+    const data = await useFetch('/signin', {
+      method: 'POST',
+      data: {
+        name: name.current.value,
+        lastname: lastname.current.value,
+        email: email.current.value,
+        password: password.current.value,
+      }
     })
-    validateData(createUser)
+    validateData(data)
   }
 
   function validateData(createUser:any) {
@@ -28,7 +30,7 @@ export default function SignIn() {
 
   return (
     <div className='d-flex justify-content-center align-items-center h-100' style = {{backgroundColor: "rgba(0,0,0,0.2)"}}>
-        <Form onSubmit = {(e) => onSubmit(e)} className = "d-flex flex-column justify-content-around align-items-center p-2" style = {{height: "45%", width: "30%", backgroundColor: "white"}}>
+        <Form onSubmit = {onSubmit} className = "d-flex flex-column justify-content-around align-items-center p-2" style = {{height: "45%", width: "30%", backgroundColor: "white"}}>
             <Link to = "/" className = "text-dark" style = {{textDecoration: "none", fontSize: "20px"}}>Sign In</Link>
             <Form.Control pattern='^((?!valid).)*$' title='Your name can not include valid' ref = {name} required placeholder='Name'/>
             <Form.Control ref = {lastname} required placeholder='Last Name'/>

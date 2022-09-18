@@ -1,28 +1,34 @@
 import fastify from 'fastify'
 import { PrismaClient } from '@prisma/client'
 import cors from '@fastify/cors'
+import cookie from '@fastify/cookie'
+import dotenv from 'dotenv'
 import bcrypt from "bcrypt"
 const prisma = new PrismaClient()
 
 const app = fastify()
 const Port = 3001
-const COMMENT_SELECT_FIELDS = {
-    id: true,
-    message: true,
-    parentId: true,
-    createdAt: true,
-    user: {
-      select: {
-        id: true,
-        name: true,
-      },
-    },
-  }
+dotenv.config()
+// const COMMENT_SELECT_FIELDS = {
+//     id: true,
+//     message: true,
+//     parentId: true,
+//     createdAt: true,
+//     user: {
+//       select: {
+//         id: true,
+//         name: true,
+//       },
+//     },
+//   }
 
 app.register(cors, {
-    origin: "*",
-    methods: ["GET", "POST"]
+    origin: process.env.WEBURL,
+    methods: ["GET", "POST"],
+    credentials:true,
 })
+
+app.register(cookie)
 
 app.get('/users', async () => {
     return await prisma.user.findMany()
@@ -30,7 +36,12 @@ app.get('/users', async () => {
 
 app.get('/post/:id', async (req: any) => {
     const postId = req.params.id
-    const post = await prisma.post.findFirst({where: {id: postId}})
+    const post = await prisma.post.findFirst({where: {id: postId}, 
+    select: {
+        title: true,
+        message:true,
+        id: true
+    }})
     // todo: make error Handlings
     if(post == undefined) return
     return post
@@ -82,14 +93,14 @@ app.post('/createPost', async (req:any) => {
     
 })
 
-app.post('/posts/:id/comments', async (req: any) => {
-    await prisma.comments.create({
+app.post('/posts/:id/comments', async (req:any) => {
+    return await prisma.comments.create({
         data: {
             message: req.body.message,
             postId: req.params.id,
-            parentId: req.body.parentId,
-            userId: 'todo',
-        }
+            userId: 'a6fb716d-2b5e-4ebe-875d-fcef3a482422',
+            parentId: req.body.parentId
+        },
     })
 })
 
@@ -103,7 +114,7 @@ async function comparePasswords(typedInPassword:string, user:any) {
 
 
 async function main() {
-    // const users = await prisma.user.findFirst({where: {name: 'Amin'} ,include: {post: true}})
+    // const users = await prisma.comments.deleteMany()
     // console.log(users)
 
     // console.log(await prisma.post.findMany())

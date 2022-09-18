@@ -1,11 +1,20 @@
 import React, {useState} from 'react'
 import { Form, Button } from 'react-bootstrap'
 
-export default function CommentForm() {
-  const [comment, setComment] = useState('')
+interface Props {
+  submitComment: any
+  loading: any
+  error: any
+  initalValue?: string
+  autofocus?: boolean
+}
+
+export default function CommentForm({submitComment, loading, error, initalValue = "", autofocus = false}: Props) {
+  const [message, setMessage] = useState(initalValue)
 
   function handleSubmit(e: any) {
     e.preventDefault()
+    submitComment(message).then(() => setMessage(''))
   }
 
   return (
@@ -14,14 +23,16 @@ export default function CommentForm() {
             <Form.Control 
                 as="textarea" 
                 style = {{resize: "none", height: "70px", width: "90%", borderRadius: ".5rem",
-                          padding: ".5em", border: "2px solid hsl(235, 50%, 74%)", lineHeight: "1.4"}}/>
+                          padding: ".5em", border: "2px solid hsl(235, 50%, 74%)", lineHeight: "1.4"}}
+                autoFocus = {autofocus}
+                onChange = {(e) => setMessage(e.target.value)}
+                value = {message} />
                 {/* todo resize button for mobile devices */}
             <Button type='submit'>
-                {/* todo: make if its loading or not */}
-                loading
+                {loading ? 'loading' : 'post'}
             </Button>
         </div>
-        <div className = "text-danger"></div>
+        <div className = "text-danger">{error}</div>
     </Form>
   )
 }
