@@ -4,10 +4,10 @@ import useFetch from '../Hooks/useFetch'
 import { Link } from "react-router-dom"
 
 interface Props {
-  setUserName: Dispatch<SetStateAction<{name: string, lastname:string}>>
+  setUser: Dispatch<SetStateAction<{name: string, lastname:string, id: string}>>
 }
 
-export default function LogIn({setUserName}:Props) {
+export default function LogIn({setUser}:Props) {
   const email:any = useRef()
   const password: any = useRef()
   const errorMessage: any = useRef()
@@ -21,7 +21,8 @@ export default function LogIn({setUserName}:Props) {
         password: password.current.value
       }
     })
-    setUserName(data)
+    console.log(data)
+    setUser(data)
     window.location.href = '/'
   }
   

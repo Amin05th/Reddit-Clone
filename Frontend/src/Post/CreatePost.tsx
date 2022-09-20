@@ -3,13 +3,13 @@ import { Modal, Form, Button } from 'react-bootstrap'
 import useFetch from '../Hooks/useFetch'
 
 interface Props {
-    userName: {
+    user: {
         name: string,
         lastname: string
     }
 }
 
-export default function CreatePost({userName}: Props) {
+export default function CreatePost({user}: Props) {
     const Title:any = useRef()
     const Message:any = useRef()
     const closeModal = () => location.href = "/"
@@ -17,8 +17,8 @@ export default function CreatePost({userName}: Props) {
         useFetch('/createPost', {
             method: 'POST',
             data: {
-                name: userName.name,
-                lastname: userName.lastname,
+                name: user.name,
+                lastname: user.lastname,
                 title: Title.current.value,
                 message: Message.current.value
             }

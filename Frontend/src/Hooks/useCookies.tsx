@@ -1,4 +1,4 @@
-import { save, load, remove } from 'react-cookies'
+import { save, load, remove,  } from 'react-cookies'
 import { useState, useEffect } from 'react'
 
 const PREFIX = 'redditClone'
@@ -16,7 +16,9 @@ export default function saveCookies(key:string, Initalvalue:(string| object)) {
     })
 
     useEffect(() => {
-        save(prefixedKey, value, { path: '/' })
+        const experationDate = new Date()
+        experationDate.setFullYear(2300, 1,1)
+        save(prefixedKey, value, { path: '/', expires: experationDate})
     }, [value, setValue])
 
     return [value, setValue]

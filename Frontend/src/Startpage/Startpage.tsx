@@ -3,16 +3,16 @@ import { Container } from 'react-bootstrap'
 import Header from './Header'
 
 interface Props {
-  userName: {
+  user: {
     name: string
     lastname: string
   }
 }
 
-export default function Startpage({userName}:Props) {
+export default function Startpage({user}:Props) {
   return (
     <Container fluid>
-        <Header userName = {userName}/>
+        <Header user = {user}/>
     </Container>
   )
 }

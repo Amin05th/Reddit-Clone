@@ -7,19 +7,22 @@ import Profil from './ProfilPage/Profil'
 import CreatePost from './Post/CreatePost'
 import Post from './Post/Post'
 import { Route, Routes} from "react-router-dom"
+import { PostProvider } from './Context/usePost'
 
 function App() {
-  const [userName, setUserName] = useCookies('User', {name: '', lastname: ''})
+  const [user, setUser] = useCookies('User', {name: '', lastname: '', id: ''})
   
   return (
     <div className ="App w-100" style = {{height: "100vh"}}>
       <Routes>
-        <Route path='/' element = {<Startpage userName = {userName}/>} />
-        <Route path='/Login' element = {<LogIn setUserName = {setUserName}/>} />
+        <Route path='/' element = {<Startpage user = {user}/>} />
+        <Route path='/Login' element = {<LogIn setUser = {setUser}/>} />
         <Route path='/Signin' element = {<SignIn />} />
-        <Route path='/createpost/:id' element = {<CreatePost userName = {userName}/>}/>
+        <Route path='/createpost/:id' element = {<CreatePost user = {user}/>}/>
         <Route path='/:name&:lastname/:id' element = {<Profil/>}/>
-        <Route path='/post/:id' element = {<Post/>}/>
+        <Route path='/post/:id' element = {<PostProvider>
+                                              <Post/>
+                                          </PostProvider>}/>
       </Routes>
     </div>
   )

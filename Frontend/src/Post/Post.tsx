@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useCallback } from 'react'
-import { useParams } from 'react-router-dom'
-import { getPostById } from '../Data/Post'
-import CommentForm from './CommentForm'
+import React from 'react'
+import CommentList from '../Comment/CommentList'
+import CommentForm from '../Comment/CommentForm'
 import { CloseButton } from 'react-bootstrap'
 import { useAsyncFn } from '../Hooks/useAsync'
+import { usePost } from '../Context/usePost'
 import { createComment } from '../Services/comment'
 
 interface Post {
@@ -13,35 +13,17 @@ interface Post {
 }
 
 export default function Post() {
-  const [post, setPost] = useState<undefined | Post>({title: '', message: '', id: ''})
-  const [comment, setComment]:any = useState([])
-  const { id } = useParams()
-  const goToPreviousPage = () => history.back()
-  const { execute, value: postValue, loading: postLoading } = useAsyncFn(getPostById)
   const { execute: createcomment, value: commentValue, loading: commentLoading, error } = useAsyncFn(createComment)
-
-  useEffect(() => {
-    execute(id)
-    setPost(postValue)
-  }, [postLoading])
+  const goToPreviousPage = () => history.back()
+  const { post, saveAllComments, rootComments }  = usePost()
 
   function submitComment(message: string) {
-    return createcomment('12417c6d-90a0-4fe1-9547-cd842c3bf491', message, null).then((comment:any) => {
-      setComment((prevState:any[]) => {
-        return [comment, ...prevState]
-      })
-    })
+    return createcomment(post.id, message, null).then(
+      saveAllComments
+    )
   }
 
   // todo: make Context
-
-  useEffect(() => {
-    setInterval(() => {
-      console.log(comment)
-    }, 10000)
-
-  }, [comment])
-
   return (
     <div className = "ms-3 d-flex flex-column" style = {{height: "100vh", width: "100vw"}}>
       <CloseButton onClick={goToPreviousPage} className = "position-absolute" style = {{top: 0, right: "1%"}}/>
@@ -54,6 +36,9 @@ export default function Post() {
           loading= {commentLoading}
           error = {error}
           />
+        {rootComments != null && rootComments?.length > 0 && 
+            <CommentList comments = {rootComments}/>
+        }
       </section>
 
     </div>

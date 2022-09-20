@@ -9,18 +9,18 @@ const prisma = new PrismaClient()
 const app = fastify()
 const Port = 3001
 dotenv.config()
-// const COMMENT_SELECT_FIELDS = {
-//     id: true,
-//     message: true,
-//     parentId: true,
-//     createdAt: true,
-//     user: {
-//       select: {
-//         id: true,
-//         name: true,
-//       },
-//     },
-//   }
+const COMMENT_SELECT_FIELDS = {
+    id: true,
+    message: true,
+    parentId: true,
+    createdAt: true,
+    user: {
+      select: {
+        id: true,
+        name: true,
+      },
+    },
+}
 
 app.register(cors, {
     origin: process.env.WEBURL,
@@ -40,7 +40,8 @@ app.get('/post/:id', async (req: any) => {
     select: {
         title: true,
         message:true,
-        id: true
+        id: true,
+        comments: true
     }})
     // todo: make error Handlings
     if(post == undefined) return
@@ -78,7 +79,7 @@ app.post('/login', async (req:any) => {
     if(user == undefined) return 'Email is not valid'
     const isPassword = await comparePasswords(req.body.password, user)
     if(!isPassword) return 'Password is not valid'
-    return {name: user.name, lastname: user.lastname}
+    return {name: user.name, lastname: user.lastname, id:user.id}
 })
 
 app.post('/createPost', async (req:any) => {
@@ -93,14 +94,17 @@ app.post('/createPost', async (req:any) => {
     
 })
 
-app.post('/posts/:id/comments', async (req:any) => {
+app.post('/posts/:id/comments', async (req: any) => {
+    const user = JSON.parse(req.cookies.redditCloneUser)
+
     return await prisma.comments.create({
         data: {
             message: req.body.message,
             postId: req.params.id,
-            userId: 'a6fb716d-2b5e-4ebe-875d-fcef3a482422',
+            userId: user.id,
             parentId: req.body.parentId
         },
+        select: COMMENT_SELECT_FIELDS
     })
 })
 
@@ -114,8 +118,8 @@ async function comparePasswords(typedInPassword:string, user:any) {
 
 
 async function main() {
-    // const users = await prisma.comments.deleteMany()
-    // console.log(users)
+    const users = await prisma.comments.findMany()
+    console.log(users)
 
     // console.log(await prisma.post.findMany())
 

@@ -6,13 +6,13 @@ import SearchResult from '../Components/SearchResult'
 import SearchBar from "../Components/SearchBar"
 
 interface Props {
-  userName: {
+  user: {
     name: string,
     lastname: string
   }
 }
 
-export default function Header({userName}:Props) {
+export default function Header({user}:Props) {
   const [openModal, setOpenModal] = useState(false)
   const [searchResult, setSearchResult] = useState([])
   const handleShow = () => setOpenModal(true)
@@ -26,18 +26,18 @@ export default function Header({userName}:Props) {
       </div>
 
       {/* show something if user is logged in and another thing if he is not logged in */}
-      {userName.name === '' ? 
+      {user.name === '' ? 
       <>
         <Button href = "/Login" variant='outline-primary' style = {{width: "150px", height: "38px"}}>Log In</Button>
         <Button href = "/Signin" style = {{width: "150px", height: "38px"}}>Sign In</Button>
       </>
       : 
       <div onClick={handleShow} className = "d-flex justify-content-center align-items-center" style = {{width: "300px", backgroundColor: "lightgray", height: "38px"}}>
-        {userName.name} {userName.lastname}
+        {user.name} {user.lastname}
       </div>
       }
         <Modal show = {openModal} onHide = {handleClose}>
-          <Setting userName = {userName} />
+          <Setting user = {user} />
         </Modal>
     </div>
   )
