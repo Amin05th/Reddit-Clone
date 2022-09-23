@@ -7,6 +7,7 @@ interface Props {
   error: any
   initalValue?: string
   autofocus?: boolean
+  isActive?: boolean
 }
 
 export default function CommentForm({submitComment, loading, error, initalValue = "", autofocus = false}: Props) {

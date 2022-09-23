@@ -24,7 +24,7 @@ const COMMENT_SELECT_FIELDS = {
 
 app.register(cors, {
     origin: process.env.WEBURL,
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials:true,
 })
 
@@ -108,6 +108,36 @@ app.post('/posts/:id/comments', async (req: any) => {
     })
 })
 
+app.put('/posts/:postId/comments/:commentid', async (req: any) => {
+    const { id } = JSON.parse(req.cookies.redditCloneUser)
+    const { userId }:any = await prisma.post.findUnique({
+        where: {id: req.params.postId},
+        select: { userId: true }
+    })
+    
+    if(id !== userId) return // todo should be an error
+
+    return await prisma.comments.update({
+        where: {id: req.params.commentid},
+        data: {message: req.body.message},
+        select: {message: true}
+    })
+})
+
+app.delete('/posts/:postId/comments/:commentid', async (req: any) => {
+    const { id } = JSON.parse(req.cookies.redditCloneUser)
+    const { userId }:any = await prisma.post.findUnique({
+        where: {id: req.params.postId},
+        select: { userId: true }
+    })
+    
+    if(id !== userId) return // todo should be an error
+
+    return await prisma.comments.delete({
+        where: {id: req.params.commentid}
+    })
+})
+
 app.listen({port: Port})
 
 
@@ -118,12 +148,12 @@ async function comparePasswords(typedInPassword:string, user:any) {
 
 
 async function main() {
-    const users = await prisma.comments.findMany()
-    console.log(users)
+    // const users = await prisma.post.findFirst({where: {title: "amin is the best"},include: {comments: true}})
+    // console.log(users)
 
     // console.log(await prisma.post.findMany())
 
-    // await prisma.post.deleteMany()
+    // await prisma.comments.deleteMany()
 }
 
 main()

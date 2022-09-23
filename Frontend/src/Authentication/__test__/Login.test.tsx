@@ -4,20 +4,22 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import LogIn from '../LogIn'
 import { BrowserRouter } from "react-router-dom"
 
-vi.mock ('react')
 
 describe('Test Login', () => {
-    const [username, setUserName] = react.useState({name: '', lastname: ''})
-
+    let state:any
+    const setState = vi.fn()
+    const useStateSpy:any = vi.spyOn(react, 'useState')
+    useStateSpy.mockImplementation((init:any) => [state,setState])
     const component = (
         <BrowserRouter>
-            <LogIn setUserName = {setUserName}/>
+            <LogIn setUser = {setState}/>
         </BrowserRouter>
     )
-    
     render(component)
 
     test('successful login', () => {
-        expect(6).toBe(6)
+        const button = screen.getByText('Log In')
+        fireEvent.submit(button)
+        expect(state).toBe(6)
     })
 });

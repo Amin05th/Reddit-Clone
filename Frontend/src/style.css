@@ -1,0 +1,28 @@
+.comment {
+    color: hsl(235, 50%, 67%);
+    margin-bottom: .25rem;
+    font-size: .75em;
+    border: 1px solid hsl(235, 100%, 90%);
+    border-radius: .5rem;
+    font-weight: bold;
+    width: 90%;
+}
+
+.header {
+    color: hsl(235, 50%, 67%);
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: .25rem;
+    font-size: .75em;
+    font-weight: "bold"
+}
+
+.button {
+    padding: .5em 1em;
+    background-color: hsl(235, 100%, 67%);
+    border: none;
+    color: white;
+    border-radius: .5em;
+    font-size: .75em; 
+    cursor: pointer
+}

@@ -9,3 +9,18 @@ export function createComment(postId: string, message: string, parentId:(string 
         }
     })
 }
+
+export function updateComment(postId: string, message: string, commentid: string) {
+    return useFetch(`/posts/${postId}/comments/${commentid}`, {
+        method: 'PUT',
+        data: {
+            message: message
+        }
+    })
+}
+
+export function deleteComment(postId: string, commentid: string) {
+    return useFetch(`/posts/${postId}/comments/${commentid}`, {
+        method: 'DELETE',
+    })
+}

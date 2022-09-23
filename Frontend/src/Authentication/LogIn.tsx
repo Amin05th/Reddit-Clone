@@ -21,7 +21,6 @@ export default function LogIn({setUser}:Props) {
         password: password.current.value
       }
     })
-    console.log(data)
     setUser(data)
     window.location.href = '/'
   }

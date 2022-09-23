@@ -13,9 +13,9 @@ interface Post {
 }
 
 export default function Post() {
-  const { execute: createcomment, value: commentValue, loading: commentLoading, error } = useAsyncFn(createComment)
+  const { execute: createcomment, loading, error } = useAsyncFn(createComment)
   const goToPreviousPage = () => history.back()
-  const { post, saveAllComments, rootComments }  = usePost()
+  const { post, saveAllComments, rootComments }: any  = usePost()
 
   function submitComment(message: string) {
     return createcomment(post.id, message, null).then(
@@ -30,10 +30,10 @@ export default function Post() {
       <h1>{post?.title}</h1>
       <article>{post?.message}</article>
       <h4 className = "my-3">Comments</h4>
-      <section>
+      <section className = "overflow-auto">
         <CommentForm 
           submitComment = {submitComment}
-          loading= {commentLoading}
+          loading= {loading}
           error = {error}
           />
         {rootComments != null && rootComments?.length > 0 && 
