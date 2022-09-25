@@ -4,12 +4,18 @@ import { getPostById } from '../Data/Post'
 import { useParams } from 'react-router-dom'
 
 interface PostContext {
-  post: any
-  saveAllComments: any
-  rootComments: any
-  getReplies: any
-  updateComments:any
-  deleteComments:any
+  post: {
+    id: string
+    value: any
+    error:string
+    loading: boolean
+  }
+  saveAllComments: Object
+  rootComments: Object
+  getReplies: (parentId: string) => Object
+  updateComments: (id: string, message: string) => void
+  deleteComments: (id: string) => void
+  toggleLikeComments: (id: string, addLike: boolean) => void
 }
 
 const Post = createContext<PostContext | null>(null)
@@ -41,7 +47,7 @@ export function PostProvider({children}:any) {
     return groupCommentsByParentId[parentId]
   }
 
-  function saveAllComments(comment:any) {
+  function saveAllComments(comment:Object) {
     setComments((prevState:any) => {
       return [comment, ...prevState]
     })
@@ -49,7 +55,7 @@ export function PostProvider({children}:any) {
 
   function updateComments(id: string, message: string) {
     setComments((prevState: any) => {
-      return prevState.map((state: any) => {
+      return prevState.map((state: {id: string}) => {
         if(state.id === id) return {...state, message}
         else return state
       })
@@ -62,12 +68,39 @@ export function PostProvider({children}:any) {
     })
   }
 
+  function toggleLikeComments(id: string, addLike: boolean) {
+    setComments((prevState: any) => {
+      return prevState.map((comment: any) => {
+        if(id === comment.id) {
+          if(addLike) {
+            return {
+              ...comment,
+              likedByMe: true,
+              likeCount: comment.likeCount + 1
+            }
+          }
+          else {
+            return {
+              ...comment,
+              likedByMe: false,
+              likeCount: comment.likeCount - 1 
+            }
+          }
+        }else {
+          return comment
+        }
+      })
+    })
+  }
+
+
   return (
     <Post.Provider value = {{
       post: {id, ...value},
       saveAllComments,
       updateComments,
       deleteComments,
+      toggleLikeComments,
       rootComments: groupCommentsByParentId[null],
       getReplies
     }}>  

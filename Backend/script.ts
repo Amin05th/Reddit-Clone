@@ -35,17 +35,43 @@ app.get('/users', async () => {
 })
 
 app.get('/post/:id', async (req: any) => {
+    const { id } = JSON.parse(req.cookies.redditCloneUser)
     const postId = req.params.id
-    const post = await prisma.post.findFirst({where: {id: postId}, 
+    return await prisma.post.findUnique({where: {id: postId}, 
     select: {
         title: true,
         message:true,
         id: true,
-        comments: true
-    }})
+        comments: {
+            orderBy: {
+                createdAt: "desc"
+            },
+            select: {
+                ...COMMENT_SELECT_FIELDS,
+                _count: {select: {likes: true}}
+            }
+        }
+    }}).then(async post => {
+        const likes = await prisma.likes.findMany({
+            where: {
+                userId: id,
+                commentsId: {in: post!.comments.map(comment => comment.id)} 
+            }
+        })
+        
+        return {
+            ...post,
+            comments: post?.comments.map(comment=> {
+                const {_count, ...commentFields} = comment
+                return {
+                    ...commentFields,
+                    likeCount: _count.likes,
+                    likedByMe: likes.find(like => like.commentsId === comment.id),
+                }
+            })
+        }
+    })
     // todo: make error Handlings
-    if(post == undefined) return
-    return post
 })
 
 app.get('/posts/:name/:lastname', async (req: any) => {
@@ -96,7 +122,6 @@ app.post('/createPost', async (req:any) => {
 
 app.post('/posts/:id/comments', async (req: any) => {
     const user = JSON.parse(req.cookies.redditCloneUser)
-
     return await prisma.comments.create({
         data: {
             message: req.body.message,
@@ -105,7 +130,38 @@ app.post('/posts/:id/comments', async (req: any) => {
             parentId: req.body.parentId
         },
         select: COMMENT_SELECT_FIELDS
+    }).then(comment => {
+        return {
+            ...comment,
+            likeCount: 0,
+            likedByMe: false,
+        }
     })
+})
+
+app.post('/posts/:postId/comments/:commentid/toggleLikes', async (req: any) => {
+    const { id } = JSON.parse(req.cookies.redditCloneUser)
+    const data = {
+        commentsId: req.params.commentid,
+        userId: id
+    }
+
+    const like = await prisma.likes.findUnique({
+        where: {
+            userId_commentsId: data
+        }
+    })
+
+    if(like == null) {
+        return await prisma.likes.create({data}).then(() => {
+            return { addLike: true }
+        })
+    }
+    else {
+        return await prisma.likes.delete({where: {userId_commentsId: data}}).then(() => {
+            return { addLike: false }
+        })
+    }
 })
 
 app.put('/posts/:postId/comments/:commentid', async (req: any) => {
@@ -148,12 +204,12 @@ async function comparePasswords(typedInPassword:string, user:any) {
 
 
 async function main() {
-    // const users = await prisma.post.findFirst({where: {title: "amin is the best"},include: {comments: true}})
+    // const users = await prisma.user.deleteMany()
     // console.log(users)
 
     // console.log(await prisma.post.findMany())
 
-    // await prisma.comments.deleteMany()
+    // await prisma.user.deleteMany()
 }
 
 main()

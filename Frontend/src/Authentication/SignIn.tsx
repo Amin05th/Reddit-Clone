@@ -10,6 +10,11 @@ export default function SignIn() {
   const password: any = useRef()
   const errorMessage: any = useRef()
 
+  function validateData(createUser: {data: string}) {
+    if(createUser.data === '') return window.location.href = '/'
+    errorMessage.current.textContent = createUser.data
+  }
+
   async function onSubmit(){
     const data = await useFetch('/signin', {
       method: 'POST',
@@ -23,11 +28,6 @@ export default function SignIn() {
     validateData(data)
   }
 
-  function validateData(createUser:any) {
-     if(createUser.data === '') return window.location.href = '/'
-     errorMessage.current.textContent = createUser.data
-  }
-
   return (
     <div className='d-flex justify-content-center align-items-center h-100' style = {{backgroundColor: "rgba(0,0,0,0.2)"}}>
         <Form onSubmit = {onSubmit} className = "d-flex flex-column justify-content-around align-items-center p-2" style = {{height: "45%", width: "30%", backgroundColor: "white"}}>
@@ -36,7 +36,7 @@ export default function SignIn() {
             <Form.Control ref = {lastname} required placeholder='Last Name'/>
             <Form.Control type = "email" ref = {email} required placeholder='Email'/>
             <Form.Control type='password' ref = {password} required placeholder='Password'/>
-            <Button type='submit' className = "w-100">Sign In</Button>
+            <Button data-testid = "signInButton" type='submit' className = "w-100">Sign In</Button>
             <p className = "text-danger" ref = {errorMessage}></p>
         </Form>
     </div>

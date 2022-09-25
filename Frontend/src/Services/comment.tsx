@@ -24,3 +24,9 @@ export function deleteComment(postId: string, commentid: string) {
         method: 'DELETE',
     })
 }
+
+export function toggleLikeComment(postId: string, commentid: string) {
+    return useFetch(`/posts/${postId}/comments/${commentid}/toggleLikes`, {
+        method: 'POST',
+    })
+}

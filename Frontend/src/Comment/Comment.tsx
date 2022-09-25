@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { usePost } from '../Context/usePost'
-import { useAsyncFn } from '../Hooks/useAsync'
-import { createComment, updateComment, deleteComment } from '../Services/comment'
+import { useComment } from '../Context/useComment'
 import CommentForm from './CommentForm'
 import CommentList from './CommentList'
 import { FaReply, FaHeart, FaRegHeart, FaTrash, FaEdit } from 'react-icons/fa'
@@ -9,31 +8,27 @@ import Icons from './Icons'
 
 interface Props {
     message: string
-    user: any
-    createdAt: any
+    user: {
+      name: string
+      id:string
+    }
+    createdAt: string
     id: string
+    currentUserId: string
+    likedByMe: boolean
+    likeCount: number
 }
 
-const dateFormatter = new Intl.DateTimeFormat(undefined, {
-  dateStyle: "medium",
-  timeStyle: "short"
-})
-
-export default function Comment({message, user, createdAt, id}: Props) {
-  const [ isReplying, setIsReplying ]:any = useState(false)
+export default function Comment({message, user, createdAt, id, currentUserId, likedByMe, likeCount}: Props) {
+  const [ isReplying, setIsReplying ] = useState(false)
   const [ areCommentsHidden, setAreCommentsHidden ] = useState(false)
   const [ isEdditing, setIsEdditing ] = useState(false)
-
-
-  const { execute: createcomment, ...createdComments } = useAsyncFn(createComment)
-  const { execute: updatecomment, ...updatedComments  } = useAsyncFn(updateComment)
-  const { execute: deletecomment } = useAsyncFn(deleteComment)
-  const { getReplies, post, saveAllComments, updateComments, deleteComments }:any = usePost()
+  const { getReplies, post, saveAllComments, updateComments, deleteComments, toggleLikeComments }:any = usePost()
+  const { dateFormatter ,Create, Update, Delete, Toggle }:any = useComment()
   const childComments = getReplies(id)
-  const likedByMe = false // change it to be in Database
-  
+
   function onCommentReply(message:string){
-    return createcomment(post.id, message, id)
+    return Create.createcomment(post.id, message, id)
             .then((comment: any) => {
               setIsReplying(false)
               saveAllComments(comment)
@@ -41,35 +36,67 @@ export default function Comment({message, user, createdAt, id}: Props) {
   }
 
   function onCommentEdit(message: string) {
-    return updatecomment(post.id, message, id)
+    return Update.updatecomment(post.id, message, id)
           .then((comment: any) => {
             setIsEdditing(false)
             updateComments(id, comment.message)
           })
   }
-
+  
   function onCommentDelete() {
-    return deletecomment(post.id, id)
+    return Delete.deletecomment(post.id, id)
            .then((comment:any) => {
             deleteComments(comment.id)
            })
+  }
+
+  function toggleLike() {
+    return Toggle.togglelikecomment(post.id, id)
+    .then(({addLike}:any) => {
+      toggleLikeComments(id, addLike)
+    })
   }
 
   return (
     <>
       <div className = "p-1 d-flex justify-content-between flex-column comment">
         <div className = "d-flex justify-content-between header">
-          <span style = {{fontWeight: "bold"}}>Amin</span>
+          <span style = {{fontWeight: "bold"}}>{user.name}</span>
           <span>
             {dateFormatter.format(Date.parse(createdAt))}
           </span>
         </div>
-        <div style = {{whiteSpace: "pre-wrap", marginLeft: '.5rem', marginTop: '.5rem'}}> {message}</div>
+        <div className='message'>{message}</div>
         <div className = "d-flex mt-1">
-          <Icons Icon={likedByMe ? FaHeart : FaRegHeart} isActive={false}>2</Icons>     
-          <Icons Icon={FaReply} isActive={false} onClick={() => setIsReplying((prev:any) => !prev)}/> 
-          <Icons Icon={FaEdit} isActive={false}  onClick = {() => setIsEdditing((prev) => !prev)}/> 
-          <Icons Icon={FaTrash} isActive={false} color = {'text-danger'} onClick = {() => onCommentDelete()}/> 
+
+          <Icons 
+            disabled = {Toggle.loading} 
+            onClick = {() => toggleLike()} 
+            Icon={likedByMe ? FaHeart : FaRegHeart} 
+            isActive={false}>{likeCount}
+            </Icons>
+
+          <Icons 
+            Icon={FaReply} 
+            isActive={isReplying} 
+            onClick={() => setIsReplying((prev:boolean) => !prev)}/>
+
+          {currentUserId === user.id && (
+            <>
+
+              <Icons 
+                Icon={FaEdit} 
+                isActive={isEdditing} 
+                onClick= {() => setIsEdditing((prev) => !prev)}/>
+
+              <Icons 
+                disabled = {Delete.loading} 
+                Icon={FaTrash} 
+                isActive={false} 
+                color = {'text-danger'} 
+                onClick = {() => onCommentDelete()}/>
+            </>
+          )}
         </div>
       </div>
 
@@ -79,8 +106,8 @@ export default function Comment({message, user, createdAt, id}: Props) {
           autofocus
           submitComment={onCommentEdit}
           isActive={isEdditing}
-          error={updatedComments.error}
-          loading={updatedComments.loading}
+          error={Update.error}
+          loading={Update.loading}
           initalValue={message}/>
         </div>
       )}
@@ -90,20 +117,18 @@ export default function Comment({message, user, createdAt, id}: Props) {
           <CommentForm 
           autofocus 
           submitComment = {onCommentReply}
-          loading = {createdComments.loading}
-          error = {createdComments.error}/>
+          loading = {Create.loading}
+          error = {Create.error}/>
         </div>
       )}
 
       {childComments?.length > 0 && (
-          // todo: understand why every nastaed comment gets more margin on the inital margin
         <>
         <div className = {`${areCommentsHidden? 'd-none': 'd-flex'}`}>
-          <button onClick={() => setAreCommentsHidden(true)} style = {{border: 'none', backgroundColor: "hsl(235, 50%, 67%)", padding: 0, width: "5px", marginTop: ".5rem",
-                            position: 'relative', cursor: 'pointer', outline: 'none', transform: "translateX(-50%)" }}/>
+          <button onClick={() => setAreCommentsHidden(true)} className = "hideComments"/>
 
           <div className = 'ps-5 flex-grow-1'>
-            <CommentList comments={childComments}/>
+            <CommentList comments={childComments} id = {currentUserId}/>
           </div>
         </div>
         <button className = {`${!areCommentsHidden? 'd-none': 'd-block'} button`} onClick = {() => setAreCommentsHidden(false)}>Show Relies</button>

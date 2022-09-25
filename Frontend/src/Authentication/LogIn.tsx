@@ -1,4 +1,4 @@
-import React, { useRef, Dispatch, SetStateAction } from 'react'
+import React, { useRef, Dispatch, SetStateAction, FormEvent } from 'react'
 import { Form, Button } from 'react-bootstrap'
 import useFetch from '../Hooks/useFetch'
 import { Link } from "react-router-dom"
@@ -8,11 +8,11 @@ interface Props {
 }
 
 export default function LogIn({setUser}:Props) {
-  const email:any = useRef()
-  const password: any = useRef()
-  const errorMessage: any = useRef()
+  const email: any = useRef()
+  const password: any = useRef(null)
+  const errorMessage: any = useRef(null)
 
-  async function onSubmit(e:any) {
+  async function onSubmit(e:FormEvent<HTMLFormElement>) {
     e.preventDefault()
     const data = await useFetch('/login', {
       method: 'POST',

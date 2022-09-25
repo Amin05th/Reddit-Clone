@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for Hooks/useFetch.tsx</title>
+    <title>Code coverage report for Data/Users.tsx</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../prettify.css" />
     <link rel="stylesheet" href="../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../index.html">All files</a> / <a href="index.html">Hooks</a> useFetch.tsx</h1>
+        <h1><a href="../index.html">All files</a> / <a href="index.html">Data</a> Users.tsx</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>12/12</span>
+                <span class='fraction'>13/13</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>12/12</span>
+                <span class='fraction'>13/13</span>
             </div>
         
             
@@ -74,7 +74,8 @@
 <a name='L9'></a><a href='#L9'>9</a>
 <a name='L10'></a><a href='#L10'>10</a>
 <a name='L11'></a><a href='#L11'>11</a>
-<a name='L12'></a><a href='#L12'>12</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L12'></a><a href='#L12'>12</a>
+<a name='L13'></a><a href='#L13'>13</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -85,17 +86,19 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span></td><td class="text"><pre class="prettyprint lang-js">import axios from "axios"
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span></td><td class="text"><pre class="prettyprint lang-js">import useFetch from '../Hooks/useFetch'
 &nbsp;
-const api = axios.create({
-  baseURL: 'http://localhost:3001',
-  withCredentials: true
-})
+export async function getAllUsers(){
+    return await useFetch('/users', {
+        method: 'GET'
+    })
+}
 &nbsp;
-export default function useFetch(url:string, options = {}) {
-  return api(url, options)
-    .then(res =&gt; res.data)
-    .catch(error =&gt; Promise.reject(error?.response.<span class="branch-0 cbranch-no" title="branch not covered" >data?.message ?? "</span>Error"))
+export async function getAllUsersPosts(name: (string | undefined), lastname: (string | undefined)) {
+    return await useFetch(`posts/${name}/${lastname}`, {
+        method: 'GET'
+    })
 }</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->

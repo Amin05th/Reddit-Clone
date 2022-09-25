@@ -1,19 +1,19 @@
-import React, {useState} from 'react'
+import React, {FormEvent, useState} from 'react'
 import { Form, Button } from 'react-bootstrap'
 
-interface Props {
-  submitComment: any
-  loading: any
-  error: any
+interface Props<T> {
+  submitComment: (message: string) => Promise<T>
+  loading: boolean
+  error: string | undefined
   initalValue?: string
   autofocus?: boolean
   isActive?: boolean
 }
 
-export default function CommentForm({submitComment, loading, error, initalValue = "", autofocus = false}: Props) {
+export default function CommentForm<T>({submitComment, loading, error, initalValue = "", autofocus = false}: Props<T>) {
   const [message, setMessage] = useState(initalValue)
 
-  function handleSubmit(e: any) {
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
     submitComment(message).then(() => setMessage(''))
   }
@@ -23,12 +23,10 @@ export default function CommentForm({submitComment, loading, error, initalValue 
         <div className = "d-flex gap-1">
             <Form.Control 
                 as="textarea" 
-                style = {{resize: "none", height: "70px", width: "90%", borderRadius: ".5rem",
-                          padding: ".5em", border: "2px solid hsl(235, 50%, 74%)", lineHeight: "1.4"}}
+                className = "commentInput" 
                 autoFocus = {autofocus}
                 onChange = {(e) => setMessage(e.target.value)}
                 value = {message} />
-                {/* todo resize button for mobile devices */}
             <Button type='submit'>
                 {loading ? 'loading' : 'post'}
             </Button>

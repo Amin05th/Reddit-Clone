@@ -1,4 +1,3 @@
-import './App.css'
 import useCookies from './Hooks/useCookies'
 import Startpage from "./Startpage/Startpage"
 import LogIn from './Authentication/LogIn'
@@ -8,6 +7,7 @@ import CreatePost from './Post/CreatePost'
 import Post from './Post/Post'
 import { Route, Routes} from "react-router-dom"
 import { PostProvider } from './Context/usePost'
+import { CommentProvider } from './Context/useComment'
 
 function App() {
   const [user, setUser] = useCookies('User', {name: '', lastname: '', id: ''})
@@ -21,7 +21,9 @@ function App() {
         <Route path='/createpost/:id' element = {<CreatePost user = {user}/>}/>
         <Route path='/:name&:lastname/:id' element = {<Profil/>}/>
         <Route path='/post/:id' element = {<PostProvider>
-                                              <Post/>
+                                              <CommentProvider>
+                                                <Post id = {user.id}/>
+                                              </CommentProvider>
                                           </PostProvider>}/>
       </Routes>
     </div>

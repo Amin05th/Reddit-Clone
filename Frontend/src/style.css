@@ -26,3 +26,50 @@
     font-size: .75em; 
     cursor: pointer
 }
+
+.message { 
+    white-space: pre-wrap;
+    margin-left: .5rem;
+    margin-top: .5rem;
+}
+
+.hideComments {
+    border: none; 
+    background-color: hsl(235, 50%, 67%); 
+    padding: 0;
+    width: 5px;
+    margin-top: .5rem;
+    position: relative;
+    cursor: pointer; 
+    outline: none;
+    transform: translateX(-50%)
+}
+
+.commentInput {
+    resize: none; 
+    height: 70px;
+    max-width: 90%;
+    border-radius: .5rem;
+    padding: .5em;
+    border: 2px solid hsl(235, 50%, 74%);
+    line-height: 1.4
+}
+
+.iconButton {
+    padding: .5em 1em; 
+    border: none; 
+    color: white; 
+    border-radius: .5em; 
+    font-size: .75em; 
+    cursor: pointer;
+    background: none;
+    padding: .25rem;
+    display: flex;
+    align-items: center
+}
+
+@media all and (max-width: 720px){
+    .commentInput {
+        max-width: 75%;
+    }
+}

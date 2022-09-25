@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">61.36% </span>
+                <span class="strong">88.63% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>27/44</span>
+                <span class='fraction'>39/44</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>1/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/2</span>
+                <span class='fraction'>1/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">61.36% </span>
+                <span class="strong">88.63% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>27/44</span>
+                <span class='fraction'>39/44</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -123,20 +123,20 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -161,25 +161,25 @@ export default function SignIn() {
   const password: any = useRef()
   const errorMessage: any = useRef()
 &nbsp;
-<span class="fstat-no" title="function not covered" >  async function onSubmit(){</span>
-<span class="cstat-no" title="statement not covered" >    const data = await useFetch('/signin', {</span>
-<span class="cstat-no" title="statement not covered" >      method: 'POST',</span>
-<span class="cstat-no" title="statement not covered" >      data: {</span>
-<span class="cstat-no" title="statement not covered" >        name: name.current.value,</span>
-<span class="cstat-no" title="statement not covered" >        lastname: lastname.current.value,</span>
-<span class="cstat-no" title="statement not covered" >        email: email.current.value,</span>
-<span class="cstat-no" title="statement not covered" >        password: password.current.value,</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
-<span class="cstat-no" title="statement not covered" >    })</span>
-<span class="cstat-no" title="statement not covered" >    validateData(data)</span>
+<span class="fstat-no" title="function not covered" >  function validateData(createUser: {data: string}) {</span>
+<span class="cstat-no" title="statement not covered" >    if(createUser.data === '') return window.location.href = '/'</span>
+<span class="cstat-no" title="statement not covered" >    errorMessage.current.textContent = createUser.data</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="fstat-no" title="function not covered" >  function validateData(createUser:any) {</span>
-<span class="cstat-no" title="statement not covered" >     if(createUser.data === '') return window.location.href = '/'</span>
-<span class="cstat-no" title="statement not covered" >     errorMessage.current.textContent = createUser.data</span>
+  async function onSubmit(){
+    const data = await useFetch('/signin', {
+      method: 'POST',
+      data: {
+        name: name.current.value,
+        lastname: lastname.current.value,
+        email: email.current.value,
+        password: password.current.value,
+      }
+    })
+<span class="branch-0 cbranch-no" title="branch not covered" >    validateData(data)</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  return (</span>
+&nbsp;
+  return (
     &lt;div className='d-flex justify-content-center align-items-center h-100' style = {{backgroundColor: "rgba(0,0,0,0.2)"}}&gt;
         &lt;Form onSubmit = {onSubmit} className = "d-flex flex-column justify-content-around align-items-center p-2" style = {{height: "45%", width: "30%", backgroundColor: "white"}}&gt;
             &lt;Link to = "/" className = "text-dark" style = {{textDecoration: "none", fontSize: "20px"}}&gt;Sign In&lt;/Link&gt;
@@ -187,7 +187,7 @@ export default function SignIn() {
             &lt;Form.Control ref = {lastname} required placeholder='Last Name'/&gt;
             &lt;Form.Control type = "email" ref = {email} required placeholder='Email'/&gt;
             &lt;Form.Control type='password' ref = {password} required placeholder='Password'/&gt;
-            &lt;Button type='submit' className = "w-100"&gt;Sign In&lt;/Button&gt;
+            &lt;Button data-testid = "signInButton" type='submit' className = "w-100"&gt;Sign In&lt;/Button&gt;
             &lt;p className = "text-danger" ref = {errorMessage}&gt;&lt;/p&gt;
         &lt;/Form&gt;
     &lt;/div&gt;
@@ -199,7 +199,7 @@ export default function SignIn() {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2022-09-23T22:57:25.549Z
+                at 2022-09-25T12:07:08.410Z
             </div>
         <script src="../prettify.js"></script>
         <script>

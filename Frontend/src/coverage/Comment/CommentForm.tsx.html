@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for Authentication/LogIn.tsx</title>
+    <title>Code coverage report for Comment/CommentForm.tsx</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../prettify.css" />
     <link rel="stylesheet" href="../base.css" />
@@ -19,13 +19,13 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../index.html">All files</a> / <a href="index.html">Authentication</a> LogIn.tsx</h1>
+        <h1><a href="../index.html">All files</a> / <a href="index.html">Comment</a> CommentForm.tsx</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>39/39</span>
+                <span class='fraction'>37/37</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>39/39</span>
+                <span class='fraction'>37/37</span>
             </div>
         
             
@@ -100,8 +100,7 @@
 <a name='L35'></a><a href='#L35'>35</a>
 <a name='L36'></a><a href='#L36'>36</a>
 <a name='L37'></a><a href='#L37'>37</a>
-<a name='L38'></a><a href='#L38'>38</a>
-<a name='L39'></a><a href='#L39'>39</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L38'></a><a href='#L38'>38</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -138,46 +137,44 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span></td><td class="text"><pre class="prettyprint lang-js">import React, { useRef, Dispatch, SetStateAction, FormEvent } from 'react'
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, {FormEvent, useState} from 'react'
 import { Form, Button } from 'react-bootstrap'
-import useFetch from '../Hooks/useFetch'
-import { Link } from "react-router-dom"
 &nbsp;
-interface Props {
-  setUser: Dispatch&lt;SetStateAction&lt;{name: string, lastname:string, id: string}&gt;&gt;
+interface Props&lt;T&gt; {
+  submitComment: (message: string) =&gt; Promise&lt;T&gt;
+  loading: boolean
+  error: string | undefined
+  initalValue?: string
+  autofocus?: boolean
+  isActive?: boolean
 }
 &nbsp;
-export default function LogIn({setUser}:Props) {
-  const email: any = useRef()
-  const password: any = useRef(null)
-  const errorMessage: any = useRef(null)
+export default function CommentForm&lt;T&gt;({submitComment, loading, error, initalValue = "", autofocus = false}: Props&lt;T&gt;) {
+  const [message, setMessage] = useState(initalValue)
 &nbsp;
-  async function onSubmit(e:FormEvent&lt;HTMLFormElement&gt;) {
+  function handleSubmit(e: FormEvent&lt;HTMLFormElement&gt;) {
     e.preventDefault()
-    const data = await useFetch('/login', {
-      method: 'POST',
-      data: {
-        email: email.current.value,
-        password: password.current.value
-      }
-    })
-    setUser(data)
-    window.location.href = '/'
+    submitComment(message).then(() =&gt; setMessage(''))
   }
-  
+&nbsp;
   return (
-    &lt;div className='d-flex justify-content-center align-items-center h-100' style = {{backgroundColor: "rgba(0,0,0,0.2)"}}&gt;
-        &lt;Form onSubmit={onSubmit} className = "d-flex flex-column justify-content-around align-items-center p-2" style = {{height: "30%", width: "30%", backgroundColor: "white"}}&gt;
-            &lt;Link to = "/" className = "text-dark align-items-center" style = {{textDecoration: "none", fontSize: "20px"}}&gt;Log in&lt;/Link&gt;
-            &lt;Form.Control type = "email" ref = {email} required placeholder='Email ...'/&gt;
-            &lt;Form.Control type = "password" ref = {password} required placeholder='Password ...'/&gt;
-            &lt;Button type = "submit" className = "w-100"&gt;Log In&lt;/Button&gt;
-            &lt;p className = "text-danger" data-testid = "error" ref = {errorMessage}&gt;&lt;/p&gt;
-        &lt;/Form&gt;
-    &lt;/div&gt;
+    &lt;Form onSubmit={handleSubmit}&gt;
+        &lt;div className = "d-flex gap-1"&gt;
+            &lt;Form.Control 
+                as="textarea" 
+                className = "commentInput" 
+                autoFocus = {autofocus}
+                onChange = {(e) =&gt; setMessage(e.target.value)}
+                value = {message} /&gt;
+            &lt;Button type='submit'&gt;
+                {loading ? 'loading' : 'post'}
+            &lt;/Button&gt;
+        &lt;/div&gt;
+        &lt;div className = "text-danger"&gt;{error}&lt;/div&gt;
+    &lt;/Form&gt;
   )
-}</pre></td></tr></table></pre>
+}
+&nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->

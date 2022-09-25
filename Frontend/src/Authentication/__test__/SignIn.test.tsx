@@ -10,9 +10,9 @@ describe('test SignIn', () => {
         </BrowserRouter>
     )
     render(component)
-
+    
     it('should pass correctly', () => {
-        const button = screen.getByText('Sign In')
+        const button = screen.getByTestId('signInButton')
         fireEvent.submit(button)
         expect(6).toBe(6)
     })
