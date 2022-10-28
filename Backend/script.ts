@@ -72,5 +72,5 @@ main()
         console.log(e)
     })
     .finally(async () => {
-        await prisma.$disconnect()
+        await prisma.$disconnect() 
     })
